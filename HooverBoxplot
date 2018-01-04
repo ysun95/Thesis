@@ -43,6 +43,8 @@ plt.ylabel('Frequency',fontsize=10)
 df = df_data.groupby('date').sum()
 #Does not work for finding yearly totals
 
+#NEED TO CONVERT TO MONTHS 
+
 # 12 x N matrix
 # annual profile
 def vec2mat(d,rows):
