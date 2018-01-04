@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan  4 14:32:25 2018
+
+@author: YS
+"""
+from __future__ import division
+import pandas as pd
+from pandas import ExcelWriter
+import matplotlib.pyplot as plt
+import numpy as np
+
+df_data= pd.read_excel('USGSBLWHooverDam.xlsx',sheetname ='1967-2018')
+df_data.columns = ['date','discharge']
+
+#extract 1967-2018 Hoover discharge data
+s = df_data.date[df_data.date == '1/1/1967 00:00:00'].index
+s = s[0]
+
+e = df_data.date[df_data.date == '12/1/2016 00:00:00'].index
+e = e[0]
+
+data = []
+for i in range(s,e+1):
+    data = np.append(data,df_data.loc[i,'discharge'])
+    
+#histogram
+plt.figure()
+plt.hist(data)
+plt.xlabel('Discharge)',fontsize=10)
+plt.ylabel('Frequency',fontsize=10)
+
+#log transformation
+transformed_data = np.log(data)
+plt.figure()
+plt.hist(transformed_data)
+plt.xlabel('Log Discharge',fontsize=10)
+plt.ylabel('Frequency',fontsize=10)
+#does not look normal
+
+#Needs to be in total yearly flow, above is for all days 
+df = df_data.groupby('date').sum()
+#Does not work for finding yearly totals
+
+# 12 x N matrix
+# annual profile
+def vec2mat(d,rows):
+    
+    #number of years in record
+    columns = int(len(d)/rows)
+    
+    #output matrix of zeros
+    output = np.zeros((rows,columns))
+    
+    #nested for loop
+    for i in range(0,columns):
+        for j in range(0,rows):
+            output[j,i] = d[i*rows+j]
+
+    return output
+#call annual profile function
+x = vec2mat(data,12)
+
+#use the boxplot fnt to plot log transformed data
+#take transformed data and make into a 12xN matrix---make a boxplot of this
+
+boxplotdata = [x[0,:],x[1,:],x[2,:],x[3,:],x[4,:],x[5,:],x[6,:],x[7,:],x[8,:],x[9,:],x[10,:],x[11,:]]
+plt.figure()
+plt.boxplot(boxplotdata)
+
