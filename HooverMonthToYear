@@ -48,23 +48,14 @@ for i in years:
 
 #Convert monthly to yearly data
 
+num_years = int(len(data_monthly)/12)
 yearlySum=[]
 yearlyData=[]
 
-for i in range(0,599):
-    value=data_monthly.cell_value(i,1)
-    yearlyData.append(value)
+for i in range(0,num_years):
 
-start = 0
-
-for i in range(0,50):
-    total=np.sum(yearlyData[start:start+12])
-    yearlySum=np.append(yearlySum, total)
-    start +=12
-
-finalData=np.zeros((50,2))
-finalData[0:50,0]=1967+np.arange(50)
-finalData[0:50,1]=yearlySum
+    yearlySum = np.sum(data_monthly[i*12:i*12+12])
+    yearlyData = np.append(yearlyData,yearlySum)
 
 #Print to Workbook
 workbook=xlsxwriter.Workbook('YearlySums.xls')
