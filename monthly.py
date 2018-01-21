@@ -33,11 +33,12 @@ for i in years:
        
       while trigger < 1:
            
-           summed_flow = summed_flow + df_data.loc[e,'discharge']
-           
            if df_data.loc[e,'month'] != j:
                trigger = 1
         
+           if trigger < 1:
+               summed_flow = summed_flow + df_data.loc[e,'discharge']
+                
            e = e + 1
         
       data_monthly = np.append(data_monthly,summed_flow)
